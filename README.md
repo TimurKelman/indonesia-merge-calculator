@@ -44,7 +44,7 @@ While inspired by the original concept, this version is not a direct copy of the
 
 ## 🌐 Live Version
 
-Hosted via GitHub Pages.
+Hosted via GitHub Pages: https://timurkelman.github.io/indonesia-merge-calculator/
 
 ---
 
