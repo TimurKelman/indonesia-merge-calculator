@@ -3,6 +3,12 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
+    paths:
+      - "*.html"
+      - "*.css"
+      - "*.js"
+      - "LICENSE"
+      - ".github/workflows/deploy.yml"
 
 permissions:
   contents: read
@@ -19,8 +25,8 @@ jobs:
 
       - name: Inject commit hash
         run: |
-          SHORT_HASH=$(git rev-parse HEAD)
-          sed -i "s/__COMMIT_HASH__/$SHORT_HASH/g" indonesia-merge-calculator.html
+          SHORT_HASH=$(git rev-parse --short HEAD)
+          sed -i "0,/__COMMIT_HASH__/s//${SHORT_HASH}/" indonesia-merge-calculator.html
 
       - name: Prepare site folder
         run: |

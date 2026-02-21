@@ -489,7 +489,8 @@ document.addEventListener("DOMContentLoaded", () => {
       commit = params.get("commit");
     }
   }
-  if (commit.length > 7) commit = commit.substring(0, 8);
+  const maxCommitLength = 15;
+  if (commit.length >= maxCommitLength) commit = commit.substring(0, maxCommitLength);
 
   if (commit) {
     versionEl.textContent = `v${APP_VERSION} · ${commit}`;
