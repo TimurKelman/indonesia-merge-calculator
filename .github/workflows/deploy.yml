@@ -23,16 +23,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Inject commit hash
+      - name: Inject short commit hash
         run: |
           SHORT_HASH=$(git rev-parse --short HEAD)
           sed -i "0,/__COMMIT_HASH__/s//${SHORT_HASH}/" indonesia-merge-calculator.html
+          sed -i "0,/__COMMIT_HASH__/s//${SHORT_HASH}/" service-worker.js
 
       - name: Prepare site folder
         run: |
           mkdir site
           cp indonesia-merge-calculator.html site/index.html
           cp LICENSE site/ || true
+          cp manifest.json site/
+          cp service-worker.js site/
+          cp icon-192.png site/
+          cp icon-512.png site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
