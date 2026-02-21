@@ -7,6 +7,9 @@ on:
       - "*.html"
       - "*.css"
       - "*.js"
+      - "*.png"
+      - "*.svg"
+      - "*.json"
       - "LICENSE"
       - ".github/workflows/deploy.yml"
 
