@@ -845,7 +845,7 @@ function calculateProjectedIncome() {
   }
   // --- Production Companies ---
   else {
-    // assuming in Rice/Spice → Siap Faji case the totalGoods is already halved
+    // assuming in Rice/Spice → Siap Saji case the totalGoods is already halved
     const goodPrice = getGoodPrice(coType);
     const revenuePerYear = totalGoods * goodPrice;
     PI = (revenuePerYear - shippingCost) * years;
@@ -1024,7 +1024,7 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
 
     <label>
       <input type="radio" name="CoTyp" value="35" onclick="onBaseParametersChanged()">
-      <span>Siap Faji</span>
+      <span>Siap Saji</span>
     </label>
 
     <label>
@@ -1034,7 +1034,7 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
 
     <label class="tooltip">
       <input type="radio" name="CoTyp" value="99" onclick="onBaseParametersChanged()">
-      <span>Rice/Spice → Siap Faji
+      <span>Rice/Spice → Siap Saji
         <span class="warn">
           <span class="icon icon-warning">
             <svg width="16" height="16">
@@ -1124,7 +1124,7 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
           <u>Shipping Companies:</u><br>
           This value does not affect the income.<br><br>
 
-          <u>Rice/Spice → Siap Faji:</u><br>
+          <u>Rice/Spice → Siap Saji:</u><br>
           Halve the produced goods (round down) before entering this value.
         </span>
       </span>
@@ -1195,7 +1195,7 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
 
           <u>Production Companies:</u><br>
           PI = (Shipped Goods &times; Good Price &minus; Ship Fees &times; 5) &times; Years<br>
-          For <u>Rice/Spice → Siap Faji</u>, Good Price = 35.
+          For <u>Rice/Spice → Siap Saji</u>, Good Price = 35.
         </span>
       </span>
     </div>
