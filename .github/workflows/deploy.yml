@@ -3,15 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
-    paths:
-      - "*.html"
-      - "*.css"
-      - "*.js"
-      - "*.png"
-      - "*.svg"
-      - "*.json"
-      - "LICENSE"
-      - ".github/workflows/deploy.yml"
+    paths-ignore:
+      - "docs/**"
+      - "README.md"
+      - ".github/FUNDING.yml"
 
 permissions:
   contents: read
