@@ -12,6 +12,24 @@ Designed for fast in-game use on desktop or mobile.
 
 ---
 
+## 🌐 Live Version
+
+Available here:  
+https://timurkelman.github.io/indonesia-merge-calculator/
+
+---
+
+## ✨ Features
+
+- Merger bid calculation
+- Company share payout calculation
+- Projected income calculation
+- Mobile-friendly interface
+- Dark mode support
+- Installable on your phone and works offline — no app store required
+
+---
+
 ## 🎲 About the Game
 
 *Indonesia* is a strategy board game designed by Jeroen Doumen and Joris Wiersinga and published by Splotter Spellen.
@@ -32,28 +50,14 @@ This project is based on the original **Indonesia Merger Calculator** published 
 
 https://boardgamegeek.com/filepage/177563/indonesia-merger-calculator
 
-Original author: Chris Burke aka Eric Torch (https://boardgamegeek.com/profile/EricTorch)
+Original author: Chris Burke (aka Eric Torch)  
+https://boardgamegeek.com/profile/EricTorch
 
 Credit to the original author for creating the first version of this very useful tool for the community.
 
 This repository is a heavily rewritten and modernized implementation.
 
 While inspired by the original concept, this version is not a direct copy of the source code and is independently implemented.
-
----
-
-## 🌐 Live Version
-
-Hosted via GitHub Pages: https://timurkelman.github.io/indonesia-merge-calculator/
-
----
-
-## ✨ Features
-
-- Bids & company shares payout calculation
-- Projected income calculation
-- Mobile-friendly interface
-- Dark mode support
 
 ---
 
@@ -69,7 +73,7 @@ All trademarks and game rights belong to their respective owners.
 
 ## 📜 License
 
-This project is licensed under the
+This project is licensed under the  
 **Creative Commons Attribution–NonCommercial 4.0 International (CC BY-NC 4.0)** license.
 
 You may:
@@ -86,7 +90,7 @@ See the LICENSE file for full details.
 
 ## 🍵 Support
 
-If this calculator made your merger math easier,
+If this calculator made your merger math easier,  
 you can buy me a tea:
 
 https://ko-fi.com/TimurKelman
