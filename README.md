@@ -11,6 +11,20 @@ This tool helps players quickly evaluate:
 Designed for fast in-game use on desktop or mobile.
 
 ---
+## 📸 Screenshots
+
+<p align="center">
+  <a href="docs/screenshot-light.jpg">
+    <img src="docs/screenshot-bidding-light.jpg" width="48%" alt="Light mode">
+  </a>
+  <a href="docs/screenshot-dark.jpg">
+    <img src="docs/screenshot-bidding-dark.jpg" width="48%" alt="Dark mode">
+  </a>
+</p>
+
+<p align="center">
+  <sub>Click either image to view the full screenshot</sub>
+</p>
 
 ## 🌐 Live Version
 
