@@ -41,6 +41,7 @@ jobs:
           cp service-worker.js site/
           cp icon-192.png site/
           cp icon-512.png site/
+          cp favicon.svg site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
