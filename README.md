@@ -81,3 +81,14 @@ You may:
 But you may **not use this project for commercial purposes**.
 
 See the LICENSE file for full details.
+
+---
+
+## 🍵 Support
+
+If this calculator made your merger math easier,
+you can buy me a tea:
+
+https://ko-fi.com/TimurKelman
+
+No pressure — just enjoy playing *Indonesia* 🙂
