@@ -223,6 +223,15 @@ input[type="number"] {
   transform: translateX(0);
 }
 
+/* at this specific width current text wraps and the icon moves
+   too far to the left */
+@media (max-width: 436px) {
+  .tooltip-narrow-workaround .tooltiptext {
+    left: 0;
+    transform: translateX(0);
+  }
+}
+
 .tooltip:hover .tooltiptext {
   opacity: 1;
 }
@@ -1278,7 +1287,7 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
       <div class="row">
         <span class="label-with-icon" id="ShippedGoods-label">
           Shipped Goods per <span class="label-tail">Year:
-          <span class="tooltip">
+          <span class="tooltip tooltip-narrow-workaround">
             <span class="icon icon-info" aria-hidden="true">
               <svg width="16" height="16">
                 <use href="#icon-info"></use>
