@@ -65,6 +65,12 @@ h1 {
   gap: 10px;
 }
 
+@media (max-width: 400px) {
+  .fields-2 {
+    gap: 4px;
+  }
+}
+
 .fields-2.fields-2--narrow-right {
   grid-template-columns: 6fr 4fr;
 }
@@ -158,6 +164,12 @@ input[readonly],
   text-align: center;
 }
 
+@media (max-width: 400px) {
+  .stepper input {
+    width: 42px;
+  }
+}
+
 /* disable number input's spin buttons */
 /* Chrome, Safari, Edge, Opera */
 input[type="number"]::-webkit-outer-spin-button,
@@ -175,8 +187,6 @@ input[type="number"] {
 
 .tooltip {
   position: relative;
-  display: inline-block;
-  margin-left: 0.25rem;
 }
 
 .radio-group label .tooltiptext {
@@ -304,7 +314,7 @@ body.dark .theme-toggle {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 14px;
+  padding: 10px 12px;
   background: #f0f0f0;
   border-radius: 8px;
   font-size: 1.1rem;
@@ -312,6 +322,11 @@ body.dark .theme-toggle {
   white-space: nowrap;
   border: 2px solid transparent;
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.radio-group .radio-text {
+  position: relative;
+  top: 1px;
 }
 
 .radio-group input[type="radio"] {
@@ -475,16 +490,29 @@ body.dark .badge-min {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 5px;
+  width: 100%;
+  min-width: 0; /* allow flex container to shrink */
 }
 
 .calc-output .breakdown {
   font-family: monospace;
   font-size: 0.9rem;
   opacity: 0.75;
+  min-width: 0; /* allow shrinking */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
 }
 
 .calc-output .value {
   font-weight: 400;
+  flex-shrink: 0; /* value must always stay visible */
+}
+
+/* Allow grid children to shrink */
+.fields-2 > * {
+  min-width: 0;
 }
 
 /* ------------------- */
@@ -539,7 +567,7 @@ body.dark .footer {
 }
 
 .icon-info {
-  transform: translateY(-5px);
+  transform: translateY(-1px);
 }
 </style>
 
@@ -861,6 +889,44 @@ function initSteppers() {
 
 /* -------------------------------- */
 
+window.addEventListener("resize", () => {
+  document.querySelectorAll(".calc-output")
+    .forEach(updateBreakdownVisibility);
+});
+
+const observer = new MutationObserver((mutations) => {
+  for (const mutation of mutations) {
+    const breakdown = mutation.target;
+    const container = breakdown.closest(".calc-output");
+    updateBreakdownVisibility(container);
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".breakdown").forEach(breakdown => {
+    observer.observe(breakdown, {
+      childList: true,
+      characterData: true,
+      subtree: true
+    });
+  });
+});
+
+function updateBreakdownVisibility(container) {
+  const breakdown = container.querySelector(".breakdown");
+  if (!breakdown) return;
+
+  // Reset in case it was hidden before
+  breakdown.style.display = "";
+
+  // Force layout check
+  if (breakdown.scrollWidth > breakdown.clientWidth) {
+    breakdown.style.display = "none";
+  }
+}
+
+/* -------------------------------- */
+
 function getGoodValue(coType) {
   if (coType === 99) return 25;
   return coType;
@@ -1092,37 +1158,37 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
   <div class="radio-group">
     <label>
       <input type="radio" name="CoTyp" value="10" checked onclick="onBaseParametersChanged()">
-      <span>Shipping</span>
+      <span class="radio-text">Shipping</span>
     </label>
 
     <label>
       <input type="radio" name="CoTyp" value="20" onclick="onBaseParametersChanged()">
-      <span>Rice</span>
+      <span class="radio-text">Rice</span>
     </label>
 
     <label>
       <input type="radio" name="CoTyp" value="25" onclick="onBaseParametersChanged()">
-      <span>Spice</span>
+      <span class="radio-text">Spice</span>
     </label>
 
     <label>
       <input type="radio" name="CoTyp" value="30" onclick="onBaseParametersChanged()">
-      <span>Rubber</span>
+      <span class="radio-text">Rubber</span>
     </label>
 
     <label>
       <input type="radio" name="CoTyp" value="35" onclick="onBaseParametersChanged()">
-      <span>Siap Saji</span>
+      <span class="radio-text">Siap Saji</span>
     </label>
 
     <label>
       <input type="radio" name="CoTyp" value="40" onclick="onBaseParametersChanged()">
-      <span>Oil</span>
+      <span class="radio-text">Oil</span>
     </label>
 
     <label class="tooltip">
       <input type="radio" name="CoTyp" value="99" onclick="onBaseParametersChanged()">
-      <span>Rice/Spice → Siap Saji
+      <span class="radio-text">Rice/Spice → Siap Saji
         <span class="warn">
           <span class="icon icon-warning">
             <svg width="16" height="16">
@@ -1210,21 +1276,22 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
       <!-- Shipped Goods -->
       <div class="row">
         <div class="label-row">
-          <label for="ShippedGoods">Shipped Goods per Year:</label>
-          <span class="tooltip">
-            <span class="icon icon-info" aria-hidden="true">
-              <svg width="16" height="16">
-                <use href="#icon-info"></use>
-              </svg>
-            </span>
-            <span class="tooltiptext">
-              <u>Shipping Companies:</u><br>
-              This value does not affect the income.<br><br>
+          <label for="ShippedGoods">Shipped Goods per Year:
+            <span class="tooltip">
+              <span class="icon icon-info" aria-hidden="true">
+                <svg width="16" height="16">
+                  <use href="#icon-info"></use>
+                </svg>
+              </span>
+              <span class="tooltiptext">
+                <u>Shipping Companies:</u><br>
+                This value does not affect the income.<br><br>
 
-              <u>Rice/Spice → Siap Saji:</u><br>
-              Halve the produced goods (round down) before entering this value.
+                <u>Rice/Spice → Siap Saji:</u><br>
+                Halve the produced goods (round down) before entering this value.
+              </span>
             </span>
-          </span>
+          </label>
         </div>
         <div class="stepper">
           <button type="button" data-step="-1">&minus;</button>
@@ -1240,7 +1307,7 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
         </div>
         <output class="calc-output" id="revenue">
           <strong class="value" id="revenue-value">0</strong>
-          <span class="breakdown" id="revenue-breakdown">(shipping)</span>
+          <span class="breakdown" id="revenue-breakdown"></span>
         </output>
       </div>
     </div>
@@ -1250,17 +1317,18 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
     <!-- Shipping Fees -->
     <div class="row">
       <div class="label-row">
-        <label for="ShipFees">Ship Fees per Year:</label>
-        <span class="tooltip">
-          <span class="icon icon-info" aria-hidden="true">
-            <svg width="16" height="16">
-              <use href="#icon-info"></use>
-            </svg>
+        <label for="ShipFees">Ship Fees per Year:
+          <span class="tooltip">
+            <span class="icon icon-info" aria-hidden="true">
+              <svg width="16" height="16">
+                <use href="#icon-info"></use>
+              </svg>
+            </span>
+            <span class="tooltiptext">
+              Shipping Cost per Year = Ship Fees &times; 5.
+            </span>
           </span>
-          <span class="tooltiptext">
-            Shipping Cost per Year = Ship Fees &times; 5.
-          </span>
-        </span>
+        </label>
       </div>
       <div class="stepper">
         <button type="button" data-step="-1">&minus;</button>
@@ -1287,17 +1355,18 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
     <!-- Years -->
     <div class="row">
       <div class="label-row">
-        <label for="Years">Years of Operation:</label>
-        <span class="tooltip">
-          <span class="icon icon-info" aria-hidden="true">
-            <svg width="16" height="16">
-              <use href="#icon-info"></use>
-            </svg>
+        <label for="Years">Years of Operation:
+          <span class="tooltip">
+            <span class="icon icon-info" aria-hidden="true">
+              <svg width="16" height="16">
+                <use href="#icon-info"></use>
+              </svg>
+            </span>
+            <span class="tooltiptext">
+              How many years the merged company is expected to operate.
+            </span>
           </span>
-          <span class="tooltiptext">
-            How many years the merged company is expected to operate.
-          </span>
-        </span>
+        </label>
       </div>
       <div class="stepper">
         <button type="button" data-step="-1">&minus;</button>
@@ -1321,24 +1390,25 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
   <!-- Potential Income -->
   <div class="row">
     <div class="label-row">
-      <label for="FutureValue">Potential Income:</label>
-      <span class="tooltip">
-        <span class="icon icon-info" aria-hidden="true">
-          <svg width="16" height="16">
-            <use href="#icon-info"></use>
-          </svg>
-        </span>
-        <span class="tooltiptext">
-          Potential Income (PI) is the future value of the merged company, assuming it doesn't grow.<br><br>
+      <label for="FutureValue">Potential Income:
+        <span class="tooltip">
+          <span class="icon icon-info" aria-hidden="true">
+            <svg width="16" height="16">
+              <use href="#icon-info"></use>
+            </svg>
+          </span>
+          <span class="tooltiptext">
+            Potential Income (PI) is the future value of the merged company, assuming it doesn't grow.<br><br>
 
-          <u>Shipping Companies:</u><br>
-          PI = Ship Fees &times; 5 &times; Years<br><br>
+            <u>Shipping Companies:</u><br>
+            PI = Ship Fees &times; 5 &times; Years<br><br>
 
-          <u>Production Companies:</u><br>
-          PI = (Shipped Goods &times; Good Price &minus; Ship Fees &times; 5) &times; Years<br>
-          For <u>Rice/Spice → Siap Saji</u>, Good Price = 35.
+            <u>Production Companies:</u><br>
+            PI = (Shipped Goods &times; Good Price &minus; Ship Fees &times; 5) &times; Years<br>
+            For <u>Rice/Spice → Siap Saji</u>, Good Price = 35.
+          </span>
         </span>
-      </span>
+      </label>
     </div>
     <output class="calc-output" id="FutureValue">
       <strong class="value" id="FutureValue-value">10</strong>
