@@ -33,7 +33,8 @@ body {
   margin: 0 auto;
 }
 
-.hidden {
+.hidden,
+.row.hidden {
   display: none;
 }
 
@@ -83,15 +84,14 @@ h1 {
 }
 
 .row label,
-.row .field-label {
+.row .field-label,
+.row .label-with-icon {
   font-weight: bold;
   margin-bottom: 6px;
 }
 
-.label-row {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem; /* space between text and icon */
+.row .label-tail {
+  white-space: nowrap;
 }
 
 input[type="text"],
@@ -1275,36 +1275,34 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
     <div class="fields-2 fields-2--narrow-right">
       <!-- Shipped Goods -->
       <div class="row">
-        <div class="label-row">
-          <label for="ShippedGoods">Shipped Goods per Year:
-            <span class="tooltip">
-              <span class="icon icon-info" aria-hidden="true">
-                <svg width="16" height="16">
-                  <use href="#icon-info"></use>
-                </svg>
-              </span>
-              <span class="tooltiptext">
-                <u>Shipping Companies:</u><br>
-                This value does not affect the income.<br><br>
-
-                <u>Rice/Spice → Siap Saji:</u><br>
-                Halve the produced goods (round down) before entering this value.
-              </span>
+        <span class="label-with-icon" id="ShippedGoods-label">
+          Shipped Goods per <span class="label-tail">Year:
+          <span class="tooltip">
+            <span class="icon icon-info" aria-hidden="true">
+              <svg width="16" height="16">
+                <use href="#icon-info"></use>
+              </svg>
             </span>
-          </label>
-        </div>
+            <span class="tooltiptext">
+              <u>Shipping Companies:</u><br>
+              This value does not affect the income.<br><br>
+
+              <u>Rice/Spice → Siap Saji:</u><br>
+              Halve the produced goods (round down) before entering this value.
+            </span>
+          </span>
+          </span>
+        </span>
         <div class="stepper">
           <button type="button" data-step="-1">&minus;</button>
-          <input type="number" id="ShippedGoods" value="2" min="0" max="50" onchange="onFutureParametersChanged()">
+          <input type="number" id="ShippedGoods" value="2" min="0" max="50" onchange="onFutureParametersChanged()" aria-labelledby="ShippedGoods-label">
           <button type="button" data-step="1">&plus;</button>
         </div>
       </div>
 
       <!-- Revenue -->
       <div class="row">
-        <div class="label-row">
-          <label for="revenue">Revenue:</label>
-        </div>
+        <label for="revenue">Revenue:</label>
         <output class="calc-output" id="revenue">
           <strong class="value" id="revenue-value">0</strong>
           <span class="breakdown" id="revenue-breakdown"></span>
@@ -1316,70 +1314,64 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
   <div class="fields-2 fields-2--narrow-right">
     <!-- Shipping Fees -->
     <div class="row">
-      <div class="label-row">
-        <label for="ShipFees">Ship Fees per Year:
-          <span class="tooltip">
-            <span class="icon icon-info" aria-hidden="true">
-              <svg width="16" height="16">
-                <use href="#icon-info"></use>
-              </svg>
-            </span>
-            <span class="tooltiptext">
-              Shipping Cost per Year = Ship Fees &times; 5.
-            </span>
+      <span class="label-with-icon" id="ShipFees-label">
+      Ship Fees per <span class="label-tail">Year:
+        <span class="tooltip">
+          <span class="icon icon-info" aria-hidden="true">
+            <svg width="16" height="16">
+              <use href="#icon-info"></use>
+            </svg>
           </span>
-        </label>
-      </div>
+          <span class="tooltiptext">
+            Shipping Cost per Year = Ship Fees &times; 5.
+          </span>
+        </span>
+        </span>
+      </span>
       <div class="stepper">
         <button type="button" data-step="-1">&minus;</button>
-        <input type="number" id="ShipFees" value="2" min="0" max="50" onchange="onFutureParametersChanged()">
+        <input type="number" id="ShipFees" value="2" min="0" max="50" onchange="onFutureParametersChanged()" aria-labelledby="ShipFees-label">
         <button type="button" data-step="1">&plus;</button>
       </div>
     </div>
 
     <!-- Shipping Cost -->
-    <div id="shippingCostsField" class="hidden">
-      <div class="row">
-        <div class="label-row">
-          <label for="costs">Costs:</label>
-        </div>
-        <output class="calc-output" id="costs">
-          <strong class="value" id="costs-value">10</strong>
-          <span class="breakdown" id="costs-breakdown">2 &times; 5</span>
-        </output>
-      </div>
+    <div id="shippingCostsField" class="hidden row">
+      <label for="costs">Costs:</label>
+      <output class="calc-output" id="costs">
+        <strong class="value" id="costs-value">10</strong>
+        <span class="breakdown" id="costs-breakdown">2 &times; 5</span>
+      </output>
     </div>
   </div>
 
   <div class="fields-2 fields-2--narrow-right">
     <!-- Years -->
     <div class="row">
-      <div class="label-row">
-        <label for="Years">Years of Operation:
-          <span class="tooltip">
-            <span class="icon icon-info" aria-hidden="true">
-              <svg width="16" height="16">
-                <use href="#icon-info"></use>
-              </svg>
-            </span>
-            <span class="tooltiptext">
-              How many years the merged company is expected to operate.
-            </span>
+      <span class="label-with-icon" id="Years-label">
+        Years of <span class="label-tail">Operation:
+        <span class="tooltip">
+          <span class="icon icon-info" aria-hidden="true">
+            <svg width="16" height="16">
+              <use href="#icon-info"></use>
+            </svg>
           </span>
-        </label>
-      </div>
+          <span class="tooltiptext">
+            How many years the merged company is expected to operate.
+          </span>
+        </span>
+        </span>
+      </span>
       <div class="stepper">
         <button type="button" data-step="-1">&minus;</button>
-        <input type="number" id="Years" value="1" min="1" max="50" onchange="onFutureParametersChanged()">
+        <input type="number" id="Years" value="1" min="1" max="50" onchange="onFutureParametersChanged()" aria-labelledby="Years-label">
         <button type="button" data-step="1">&plus;</button>
       </div>
     </div>
 
     <!-- Net Per Year -->
     <div class="row">
-      <div class="label-row">
-        <label for="net">Net Income:</label>
-      </div>
+      <label for="net">Net Income:</label>
       <output class="calc-output" id="net">
         <strong class="value" id="net-value">10</strong>
         <span class="breakdown" id="net-breakdown">10 &minus; 0</span>
@@ -1389,28 +1381,28 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
 
   <!-- Potential Income -->
   <div class="row">
-    <div class="label-row">
-      <label for="FutureValue">Potential Income:
-        <span class="tooltip">
-          <span class="icon icon-info" aria-hidden="true">
-            <svg width="16" height="16">
-              <use href="#icon-info"></use>
-            </svg>
-          </span>
-          <span class="tooltiptext">
-            Potential Income (PI) is the future value of the merged company, assuming it doesn't grow.<br><br>
-
-            <u>Shipping Companies:</u><br>
-            PI = Ship Fees &times; 5 &times; Years<br><br>
-
-            <u>Production Companies:</u><br>
-            PI = (Shipped Goods &times; Good Price &minus; Ship Fees &times; 5) &times; Years<br>
-            For <u>Rice/Spice → Siap Saji</u>, Good Price = 35.
-          </span>
+    <span class="label-with-icon" id="FutureValue-label">
+    Potential <span class="label-tail">Income:
+      <span class="tooltip">
+        <span class="icon icon-info" aria-hidden="true">
+          <svg width="16" height="16">
+            <use href="#icon-info"></use>
+          </svg>
         </span>
-      </label>
-    </div>
-    <output class="calc-output" id="FutureValue">
+        <span class="tooltiptext">
+          Potential Income (PI) is the future value of the merged company, assuming it doesn't grow.<br><br>
+
+          <u>Shipping Companies:</u><br>
+          PI = Ship Fees &times; 5 &times; Years<br><br>
+
+          <u>Production Companies:</u><br>
+          PI = (Shipped Goods &times; Good Price &minus; Ship Fees &times; 5) &times; Years<br>
+          For <u>Rice/Spice → Siap Saji</u>, Good Price = 35.
+        </span>
+      </span>
+      </span>
+    </span>
+    <output class="calc-output" id="FutureValue" aria-labelledby="FutureValue-label">
       <strong class="value" id="FutureValue-value">10</strong>
       <span class="breakdown" id="FutureValue-breakdown">1 &times; (10 &minus; 0)</span>
     </output>
