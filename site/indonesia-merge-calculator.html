@@ -33,6 +33,10 @@ body {
   margin: 0 auto;
 }
 
+.hidden {
+  display: none;
+}
+
 h1 {
   text-align: center;
   margin-bottom: 20px;
@@ -55,13 +59,25 @@ h1 {
   font-size: 1.3rem;
 }
 
+.fields-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.fields-2.fields-2--narrow-right {
+  grid-template-columns: 6fr 4fr;
+}
+
 .row {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   margin-bottom: 14px;
 }
 
-.row label {
+.row label,
+.row .field-label {
   font-weight: bold;
   margin-bottom: 6px;
 }
@@ -75,7 +91,8 @@ h1 {
 input[type="text"],
 input[type="number"],
 select,
-.dropdown {
+.dropdown,
+.calc-output {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -85,7 +102,8 @@ select,
   transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
-input[readonly] {
+input[readonly],
+.calc-output {
   background: #eee;
 }
 
@@ -248,13 +266,15 @@ body.dark .section {
 }
 
 body.dark input,
-body.dark select {
+body.dark select,
+body.dark .calc-output {
   background: #3a3a3a;
   color: #fff;
   border-color: #555;
 }
 
-body.dark input[readonly] {
+body.dark input[readonly],
+body.dark .calc-output {
   background: #444;
 }
 
@@ -373,7 +393,7 @@ body.dark .warn {
   background: var(--bg, #fff);
   border: 1px solid #aaa;
   border-radius: 6px;
-  max-height: 240px;
+  max-height: 340px;
   overflow-y: auto;
   z-index: 20;
 }
@@ -448,6 +468,26 @@ body.dark .badge-min {
   background: rgba(255,255,255,0.12);
   color: #ddd;
 }
+
+/* ------------------- */
+
+.calc-output {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calc-output .breakdown {
+  font-family: monospace;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+.calc-output .value {
+  font-weight: 400;
+}
+
+/* ------------------- */
 
 .footer {
   text-align: center;
@@ -838,25 +878,54 @@ function calculateProjectedIncome() {
   const years = parseInt(document.getElementById("Years").value) || 1;
   const coType = parseInt(document.querySelector('input[name="CoTyp"]:checked').value);
 
-  // Total shipping cost per year
-  const shippingCost = shipFees * 5;
+  // Get outputs
+  const revenueValue = document.getElementById("revenue-value")
+  const revenueBreakdown = document.getElementById("revenue-breakdown")
+  const costsValue = document.getElementById("costs-value")
+  const costsBreakdown = document.getElementById("costs-breakdown")
+  const netValue = document.getElementById("net-value")
+  const netBreakdown = document.getElementById("net-breakdown")
+  const futureValue = document.getElementById("FutureValue-value")
+  const futureBreakdown = document.getElementById("FutureValue-breakdown")
 
   let PI = 0;
 
+  let revenue = 0;
+  let costs = 0;
+
   // --- Shipping Company ---
   if (coType === 10) {
-    PI = shipFees * 5 * years;
+    revenue = shipFees * 5;
+    costs = 0;
+
+    revenueValue.innerText = "0";
+    revenueBreakdown.innerText = "";
+
+    costsValue.innerText = "0";
+    costsBreakdown.innerHTML = "";
+
+    netValue.innerText = revenue;
+    netBreakdown.innerHTML = `= ${shipFees} &times; 5`;
   }
   // --- Production Companies ---
   else {
     // assuming in Rice/Spice → Siap Saji case the totalGoods is already halved
     const goodPrice = getGoodPrice(coType);
-    const revenuePerYear = totalGoods * goodPrice;
-    PI = (revenuePerYear - shippingCost) * years;
+    revenue = totalGoods * goodPrice;
+    revenueValue.innerText = revenue;
+    revenueBreakdown.innerHTML = `= ${totalGoods} &times; ${goodPrice}`
+
+    costs = shipFees * 5;
+    costsValue.innerText = costs;
+    costsBreakdown.innerHTML = `= ${shipFees} &times; 5`;
+
+    netValue.innerText = revenue - costs;
+    netBreakdown.innerHTML = `= ${revenue} &minus; ${costs}`;
   }
 
-  // Output
-  document.getElementById("FutureValue").value = PI;
+  PI = (revenue - costs) * years;
+  futureValue.innerText = PI;
+  futureBreakdown.innerHTML = `= ${years} &times; ${revenue - costs}`;
 }
 
 function buildBiddingSection() {
@@ -904,11 +973,15 @@ function calculateCompanyValues() {
   const goods1 = parseInt(document.getElementById("NGood1").value) || 0;
   const goods2 = parseInt(document.getElementById("NGood2").value) || 0;
 
-  const val1 = document.getElementById("CoVal1");
-  const val2 = document.getElementById("CoVal2");
+  const val1value = document.getElementById("CoVal1-value");
+  const val1breakdown = document.getElementById("CoVal1-breakdown");
+  const val2value = document.getElementById("CoVal2-value");
+  const val2breakdown = document.getElementById("CoVal2-breakdown");
 
-  val1.value = bidN * goods1;
-  val2.value = bidN * goods2;
+  val1value.innerText = bidN * goods1;
+  val1breakdown.innerHTML = `= ${bidN} &times; ${goods1}`;
+  val2value.innerText = bidN * goods2;
+  val2breakdown.innerHTML = `= ${bidN} &times; ${goods2}`;
 }
 
 function calculateProjectedIncomeParameters() {
@@ -922,6 +995,17 @@ function calculateProjectedIncomeParameters() {
 
   const shipFees = document.getElementById("ShipFees");
   shipFees.value = Math.floor(shippedAmount * 1.5);
+
+  // show/hide shippingGoodsRow and shippingCostsField
+  const shippingGoodsRow = document.getElementById("shippingGoodsRow");
+  const shippingCostsField = document.getElementById("shippingCostsField");
+  if (coType === 10) {
+    shippingGoodsRow.classList.add("hidden");
+    shippingCostsField.classList.add("hidden");
+  } else {
+    shippingGoodsRow.classList.remove("hidden");
+    shippingCostsField.classList.remove("hidden");
+  }
 }
 
 function onFutureParametersChanged() {
@@ -1102,12 +1186,18 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
 
   <div class="row">
     <label for="CoVal1">Company 1 Share:</label>
-    <input type="text" id="CoVal1" value="0" readonly>
+    <output class="calc-output" id="CoVal1">
+      <strong class="value" id="CoVal1-value">30</strong>
+      <span class="breakdown" id="CoVal1-breakdown">3 &times; 10</span>
+    </output>
   </div>
 
   <div class="row">
     <label for="CoVal2">Company 2 Share:</label>
-    <input type="text" id="CoVal2" value="0" readonly>
+    <output class="calc-output" id="CoVal2">
+      <strong class="value" id="CoVal2-value">30</strong>
+      <span class="breakdown" id="CoVal2-breakdown">3 &times; 10</span>
+    </output>
   </div>
 </div>
 
@@ -1115,73 +1205,120 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
 <div class="section">
   <h2>Future Value</h2>
 
-  <div class="row">
-    <div class="label-row">
-      <label for="ShippedGoods">Shipped Goods per Year:</label>
-      <span class="tooltip">
-        <span class="icon icon-info" aria-hidden="true">
-          <svg width="16" height="16">
-            <use href="#icon-info"></use>
-          </svg>
-        </span>
-        <span class="tooltiptext">
-          <u>Shipping Companies:</u><br>
-          This value does not affect the income.<br><br>
+  <div id="shippingGoodsRow" class="hidden">
+    <div class="fields-2 fields-2--narrow-right">
+      <!-- Shipped Goods -->
+      <div class="row">
+        <div class="label-row">
+          <label for="ShippedGoods">Shipped Goods per Year:</label>
+          <span class="tooltip">
+            <span class="icon icon-info" aria-hidden="true">
+              <svg width="16" height="16">
+                <use href="#icon-info"></use>
+              </svg>
+            </span>
+            <span class="tooltiptext">
+              <u>Shipping Companies:</u><br>
+              This value does not affect the income.<br><br>
 
-          <u>Rice/Spice → Siap Saji:</u><br>
-          Halve the produced goods (round down) before entering this value.
-        </span>
-      </span>
-    </div>
-    <div class="stepper">
-      <button type="button" data-step="-1">&minus;</button>
-      <input type="number" id="ShippedGoods" value="2" min="0" max="50" onchange="onFutureParametersChanged()">
-      <button type="button" data-step="1">&plus;</button>
+              <u>Rice/Spice → Siap Saji:</u><br>
+              Halve the produced goods (round down) before entering this value.
+            </span>
+          </span>
+        </div>
+        <div class="stepper">
+          <button type="button" data-step="-1">&minus;</button>
+          <input type="number" id="ShippedGoods" value="2" min="0" max="50" onchange="onFutureParametersChanged()">
+          <button type="button" data-step="1">&plus;</button>
+        </div>
+      </div>
+
+      <!-- Revenue -->
+      <div class="row">
+        <div class="label-row">
+          <label for="revenue">Revenue:</label>
+        </div>
+        <output class="calc-output" id="revenue">
+          <strong class="value" id="revenue-value">0</strong>
+          <span class="breakdown" id="revenue-breakdown">(shipping)</span>
+        </output>
+      </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="label-row">
-      <label for="ShipFees">Ship Fees per Year:</label>
-      <span class="tooltip">
-        <span class="icon icon-info" aria-hidden="true">
-          <svg width="16" height="16">
-            <use href="#icon-info"></use>
-          </svg>
+  <div class="fields-2 fields-2--narrow-right">
+    <!-- Shipping Fees -->
+    <div class="row">
+      <div class="label-row">
+        <label for="ShipFees">Ship Fees per Year:</label>
+        <span class="tooltip">
+          <span class="icon icon-info" aria-hidden="true">
+            <svg width="16" height="16">
+              <use href="#icon-info"></use>
+            </svg>
+          </span>
+          <span class="tooltiptext">
+            Shipping Cost per Year = Ship Fees &times; 5.
+          </span>
         </span>
-        <span class="tooltiptext">
-          Shipping Cost per Year = Ship Fees &times; 5.
-        </span>
-      </span>
+      </div>
+      <div class="stepper">
+        <button type="button" data-step="-1">&minus;</button>
+        <input type="number" id="ShipFees" value="2" min="0" max="50" onchange="onFutureParametersChanged()">
+        <button type="button" data-step="1">&plus;</button>
+      </div>
     </div>
-    <div class="stepper">
-      <button type="button" data-step="-1">&minus;</button>
-      <input type="number" id="ShipFees" value="2" min="0" max="50" onchange="onFutureParametersChanged()">
-      <button type="button" data-step="1">&plus;</button>
+
+    <!-- Shipping Cost -->
+    <div id="shippingCostsField" class="hidden">
+      <div class="row">
+        <div class="label-row">
+          <label for="costs">Costs:</label>
+        </div>
+        <output class="calc-output" id="costs">
+          <strong class="value" id="costs-value">10</strong>
+          <span class="breakdown" id="costs-breakdown">2 &times; 5</span>
+        </output>
+      </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="label-row">
-      <label for="Years">Years of Operation:</label>
-      <span class="tooltip">
-        <span class="icon icon-info" aria-hidden="true">
-          <svg width="16" height="16">
-            <use href="#icon-info"></use>
-          </svg>
+  <div class="fields-2 fields-2--narrow-right">
+    <!-- Years -->
+    <div class="row">
+      <div class="label-row">
+        <label for="Years">Years of Operation:</label>
+        <span class="tooltip">
+          <span class="icon icon-info" aria-hidden="true">
+            <svg width="16" height="16">
+              <use href="#icon-info"></use>
+            </svg>
+          </span>
+          <span class="tooltiptext">
+            How many years the merged company is expected to operate.
+          </span>
         </span>
-        <span class="tooltiptext">
-          How many years the merged company is expected to operate.
-        </span>
-      </span>
+      </div>
+      <div class="stepper">
+        <button type="button" data-step="-1">&minus;</button>
+        <input type="number" id="Years" value="1" min="1" max="50" onchange="onFutureParametersChanged()">
+        <button type="button" data-step="1">&plus;</button>
+      </div>
     </div>
-    <div class="stepper">
-      <button type="button" data-step="-1">&minus;</button>
-      <input type="number" id="Years" value="1" min="1" max="50" onchange="onFutureParametersChanged()">
-      <button type="button" data-step="1">&plus;</button>
+
+    <!-- Net Per Year -->
+    <div class="row">
+      <div class="label-row">
+        <label for="net">Net Income:</label>
+      </div>
+      <output class="calc-output" id="net">
+        <strong class="value" id="net-value">10</strong>
+        <span class="breakdown" id="net-breakdown">10 &minus; 0</span>
+      </output>
     </div>
   </div>
 
+  <!-- Potential Income -->
   <div class="row">
     <div class="label-row">
       <label for="FutureValue">Potential Income:</label>
@@ -1203,7 +1340,10 @@ document.addEventListener("DOMContentLoaded", () => { init(); });
         </span>
       </span>
     </div>
-    <input type="text" id="FutureValue" value="0" readonly>
+    <output class="calc-output" id="FutureValue">
+      <strong class="value" id="FutureValue-value">10</strong>
+      <span class="breakdown" id="FutureValue-breakdown">1 &times; (10 &minus; 0)</span>
+    </output>
   </div>
 </div>
 
